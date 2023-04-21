@@ -44,6 +44,7 @@
         </select>
 
         <p>14,50€</p>
+        <label for="address">Adresse: </label>
         <input name='address' placeholder='Ihre Adresse' value="" required>
         <br/>
         <input type='reset' value='Alle Löschen'>
