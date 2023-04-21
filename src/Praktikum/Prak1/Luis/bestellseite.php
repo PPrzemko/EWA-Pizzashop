@@ -41,6 +41,7 @@
                 <option>Pizza Hawaii</option>
             </select>
             <p>14,50€</p>  <!-- static data for demonstration purposes -->
+            <label for="addressInput">Adresse: </label>
             <input type="text" name="addressInput" value="" placeholder="Ihre Adresse"> <br />
             <input type='reset' value='Alle Löschen'>
             <input type='button' value='Auswahl Löschen'>
