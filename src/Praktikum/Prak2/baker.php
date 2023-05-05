@@ -29,7 +29,7 @@
 	 * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
 	 * @author   Ralf Hahn, <ralf.hahn@h-da.de>
 	 */
-	class PageTemplate extends Page
+	class Baker extends Page
 	{
 		// to do: declare reference variables for members
 		// representing substructures/blocks
@@ -67,7 +67,7 @@
 		{
 			// to do: fetch data for this view from the database
 			// to do: return array containing data
-			$test = "SELECT a.ordering_id, a2.name, a.ordered_article_id FROM ordered_article as a
+			$test = "SELECT a.ordering_id, a2.name, a.status a.ordered_article_id FROM ordered_article as a
     				JOIN article as a2 ON a2.article_id=a.article_id";
 			$records = $this->_database->query($test)->fetch_all();
 			return $records;
@@ -148,6 +148,11 @@
 		protected function processReceivedData(): void
 		{
 			parent::processReceivedData();
+
+
+
+
+            header('Location: baker.php'); die;
 			// to do: call processReceivedData() for all members
 		}
 		
@@ -165,7 +170,7 @@
 		public static function main(): void
 		{
 			try {
-				$page = new PageTemplate();
+				$page = new Baker();
 				$page->processReceivedData();
 				$page->generateView();
 			} catch(Exception $e) {
@@ -178,7 +183,7 @@
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-	PageTemplate::main();
+	Baker::main();
 	
 	// Zend standard does not like closing php-tag!
 	// PHP doesn't require the closing tag (it is assumed when the file ends).
