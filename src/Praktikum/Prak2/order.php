@@ -127,20 +127,11 @@ END;
                     <h1>Warenkorb</h1>
                     <form action='https://echo.fbi.h-da.de/' method='post' accept-charset='UTF-8'>
                         <select name='pizza[]' size='3' multiple tabindex="0">
-END;
-        $endprice=0;
-        foreach ($data as $row){
-            $article_id = $row[0];
-            $name = $row[1];
-            $price = $row[3];
-            $endprice = $endprice + $price;
-            echo<<<END
-                            <option value='$article_id'>Pizza $name</option>
-END;
-        }
-            echo<<<END
+                            <option value='margherita' selected>Pizza Margherita</option>
+                            <option value='salami'>Pizza Salami</option>
+                            <option value='hawaii'>Pizza Hawaii</option>
                         </select>
-                        <p>$endprice €</p>
+                        <p>14,50€</p>
                         <label for="address">Adresse: </label>
                         <input name='address' placeholder='Ihre Adresse' value="" required>
                         <br/>
@@ -150,11 +141,8 @@ END;
                     </form>
                 </section>
                 </body>
-                </html>     
+                </html>
 END;
-
-
-
 
         $this->generatePageFooter();
     }
