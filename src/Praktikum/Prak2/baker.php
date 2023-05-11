@@ -173,13 +173,6 @@
 		protected function processReceivedData(): void
 		{
 			parent::processReceivedData();
-
-
-
-
-            header('Location: baker.php'); die;
-			// to do: call processReceivedData() for all members
-			
 			if(count($_POST)) {
 				//Key = ordering_id and value = status
 				foreach ($_POST as $key => $value) {
