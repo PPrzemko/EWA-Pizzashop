@@ -67,16 +67,15 @@ class Order extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        $test = "SELECT a.ordering_id, a2.name, a.ordered_article_id FROM ordered_article as a
-    				JOIN article as a2 ON a2.article_id=a.article_id";
-        $records = $this->_database->query($test)->fetch_all();
-        return $records;
+        $queryArticles = "select * from article";
+        $recordsArticles = $this->_database->query($queryArticles)->fetch_all();
+        return $recordsArticles;
     }
 
     /**
      * First the required data is fetched and then the HTML is
      * assembled for output. i.e. the header is generated, the content
-     * of the page ("view") is inserted and -if available- the content of
+     * of the page ("view") is inserted and -if available the content of
      * all views contained is generated.
      * Finally, the footer is added.
      * @return void
@@ -91,50 +90,58 @@ class Order extends Page
 
         echo <<<END
 				<!DOCTYPE html>
-				<html lang='de'>
-				<head>
-					<meta charset='utf-8'>
-					<!-- für später: CSS include -->
-					<!-- <link rel="stylesheet" href="XXX.css"/> -->
-					<!-- für später: JavaScript include -->
-					<!-- <script src="XXX.js"></script> -->
-					<title>Bäcker</title>
-				</head>
-				<body>
-					<form action="" method="post">
-						<section>
-							<h1>Bestellte Pizzen:</h1>
-				END;
+                <html lang='de'>
+                <head>
+                    <meta charset='utf-8'>
+                    <!-- für später: CSS include -->
+                    <!-- <link rel="stylesheet" href="XXX.css"/> -->
+                    <!-- für später: JavaScript include -->
+                    <!-- <script src="XXX.js"></script> -->
+                    <title>PIZZA</title>
+                </head>
+                <body>
+                <section>
+                <article>
+END;
 
         foreach($data as $row) {
             // TODO: Fix HTML-Lint & order grouping
-            $ordering_id=$row[0];
+            $article_id=$row[0];
             $name=$row[1];
-            $ordered_article_id =$row[2];
+            $picture =$row[2];
+            $price=$row[3];
             echo <<<END
-				 <article>
-					<fieldset>
-						<legend accesskey="3">Bestellung $ordering_id $name</legend>
-						
-						<label for="bestellt$ordered_article_id">Bestellt</label>
-						<input type="radio" id="bestellt$ordered_article_id" name="$ordered_article_id" value="ordered" checked> <br />
-						
-						<label for="inOven$ordered_article_id">Im Ofen</label>
-						<input type="radio" id="inOven$ordered_article_id" name="$ordered_article_id" value="inOven"> <br />
-						
-						<label for="done$ordered_article_id">Fertig</label>
-						<input type="radio" id="done$ordered_article_id" name="$ordered_article_id" value="done"> <br />
-					</fieldset>
-				</article>
-				END;
+				 <div>
+                    <img src='$picture' height='160' width='250' alt='$name' />
+                    <p>$name</p>
+                     <p>$price</p>
+                </div>
+END;
         }
         echo <<<END
-			        </section>
-			<input type="submit" value="Absenden" />
-				</form>
-			</body>
-			</html>
-			END;
+            </article>
+			</section>
+            <section>
+                <h1>Warenkorb</h1>
+                <form action='https://echo.fbi.h-da.de/' method='post' accept-charset='UTF-8'>
+                    <select name='pizza[]' size='3' multiple tabindex="0">
+                        <option value='margherita' selected>Pizza Margherita</option>
+                        <option value='salami'>Pizza Salami</option>
+                        <option value='hawaii'>Pizza Hawaii</option>
+                    </select>
+            
+                    <p>14,50€</p>
+                    <label for="address">Adresse: </label>
+                    <input name='address' placeholder='Ihre Adresse' value="" required>
+                    <br/>
+                    <input type='reset' value='Alle Löschen'>
+                    <input type='button' value='Auswahl Löschen'>
+                    <input type='submit' value='Bestellen'>
+                </form>
+            </section>
+            </body>
+            </html>
+END;
 
         $this->generatePageFooter();
     }
