@@ -107,7 +107,7 @@ END;
 							$statusDisplayname="Im Backofen";
 							break;
 						case 2:
-							$statusDisplayname="done";
+							$statusDisplayname="Useless";
 							break;
 						case 3:
 							$statusDisplayname="bereit zu lieferung";
