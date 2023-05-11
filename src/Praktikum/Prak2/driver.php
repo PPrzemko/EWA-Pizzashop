@@ -69,18 +69,30 @@ class Driver extends Page
         /*$orderIdAddress = "SELECT o.ordering_id, address FROM ordering as o
                 JOIN ordered_article as oa ON o.ordering_id = oa.ordering_id
                 GROUP BY o.ordering_id"; */
+        /*  O = Ordered
+            1 = in Oven
+            2 = done //useless
+            3 = ready for delivery
+            4 = on the way
+            5 = delivered
+        */
+        $queryOrdersReadyToDeliver = "SELECT t1.ordering_id, t2.address, t1.status
+FROM (
+         SELECT ordering_id, status, COUNT(*) AS total_parts, SUM(CASE WHEN status >= 3 THEN 1 ELSE 0 END) AS completed_parts
+         FROM ordered_article
+         GROUP BY ordering_id
+         HAVING total_parts = completed_parts
+     ) t1
+         JOIN ordering t2 ON t1.ordering_id = t2.ordering_id";
 
-        $queryIdStatus = "SELECT o.ordering_id, oa.status, address FROM ordering as o
-                JOIN ordered_article as oa ON o.ordering_id = oa.ordering_id";
-
-        $recordsIdStatus = $this->_database->query($queryIdStatus)->fetch_all();
-        foreach ($recordsIdStatus as $row){
+        $recordsOrdersReadyToDeliver = $this->_database->query($queryOrdersReadyToDeliver)->fetch_all();
+        foreach ($recordsOrdersReadyToDeliver as $row){
 
         }
 
 
 
-        return $records;
+        return $recordsOrdersReadyToDeliver;
     }
 
     /**
@@ -97,6 +109,11 @@ class Driver extends Page
         $this->generatePageHeader('to do: change headline'); //to do: set optional parameters
         // to do: output view of this page
         echo <<<END
+				<script>
+                setTimeout(function(){
+                   window.location.reload(1);
+                }, 10000);
+                </script>
 				<!DOCTYPE html>
 				<html lang='de'>
 				<head>
@@ -110,10 +127,56 @@ class Driver extends Page
 				<body>
 					<form action="" method="post">
 						<section>
-							<h1>Bestellte Pizzen:</h1>
-				END;
+							<h1>Fahrer:</h1>
+END;
+        foreach($data as $row) {
 
+            $ordering_id=htmlspecialchars($row[0]);
+            $address=htmlspecialchars($row[1]);
+            $status=htmlspecialchars($row[2]);
 
+            $ready = "";
+            $onTheWay = "";
+            $delivered = "";
+            //switch case for status
+            switch ($status) {
+                case 3:
+                    $ready = "checked";
+                    break;
+                case 4:
+                    $onTheWay = "checked";
+                    break;
+                case 5:
+                    $delivered = "checked";
+                    break;
+            }
+
+            echo <<<END
+            <article>
+                <fieldset id="Order$ordering_id">
+                    <legend accesskey="1">Bestellung $ordering_id</legend>
+                    <p>Adresse: $address </p>
+                    
+                    <label for="ready">Bereit für Lieferung</label>
+                    <input type="radio" id="ready" name="$ordering_id" value="3" $ready> <br />
+                    
+                    <label for="onTheWay">Auf dem Weg</label>
+                    <input type="radio" id="onTheWay" name="$ordering_id" value="4" $onTheWay> <br />
+                    
+                    <label for="delivered">Ausgeliefert</label>
+                    <input type="radio" id="delivered" name="$ordering_id" value="5" $delivered> <br />
+                </fieldset>
+            </article>
+            END;
+        }
+
+        echo <<<END
+			        </section>
+			<input type="submit" value="Absenden" />
+				</form>
+			</body>
+			</html>
+			END;
 
         $this->generatePageFooter();
     }
@@ -128,6 +191,18 @@ class Driver extends Page
     {
         parent::processReceivedData();
         // to do: call processReceivedData() for all members
+        if(count($_POST)) {
+            //Key = ordering_id and value = status
+            foreach ($_POST as $key => $value) {
+                $key = mysqli_real_escape_string($this->_database,strval($key));
+                $value = mysqli_real_escape_string($this->_database,strval($value));
+                $query = "UPDATE ordered_article SET status = $value WHERE ordering_id = $key";
+                $this->_database->query($query);
+            }
+            header("HTTP/1.1 303 See Other");
+            header("Location: driver.php");
+            die();
+        }
     }
 
     /**

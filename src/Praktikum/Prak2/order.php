@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 // UTF-8 marker äöüÄÖÜß€
 /**
  * Class PageTemplate for the exercises of the EWA lecture
@@ -31,7 +31,7 @@ require_once './Page.php';
  */
 class Order extends Page
 {
-    // to do: declare reference variables for members 
+    // to do: declare reference variables for members
     // representing substructures/blocks
 
     /**
@@ -54,40 +54,42 @@ class Order extends Page
     public function __destruct()
     {
         parent::__destruct();
+
     }
 
     /**
      * Fetch all data that is necessary for later output.
      * Data is returned in an array e.g. as associative array.
-	 * @return array An array containing the requested data. 
-	 * This may be a normal array, an empty array or an associative array.
+     * @return array An array containing the requested data.
+     * This may be a normal array, an empty array or an associative array.
      */
-    protected function getViewData():array
+    protected function getViewData(): array
     {
         // to do: fetch data for this view from the database
-		// to do: return array containing data
-        $query = "SELECT article_id, name, picture, price FROM article";
-        $records = $this->_database->query($query)->fetch_all();
-
-        return $records;
-
+        // to do: return array containing data
+        $queryArticles = "select * from article";
+        $recordsArticles = $this->_database->query($queryArticles)->fetch_all();
+        return $recordsArticles;
     }
 
     /**
      * First the required data is fetched and then the HTML is
      * assembled for output. i.e. the header is generated, the content
-     * of the page ("view") is inserted and -if available- the content of
+     * of the page ("view") is inserted and -if available the content of
      * all views contained is generated.
      * Finally, the footer is added.
-	 * @return void
+     * @return void
      */
-    protected function generateView():void
+    protected function generateView(): void
     {
-		$data = $this->getViewData();
+        $data = $this->getViewData();
         $this->generatePageHeader('to do: change headline'); //to do: set optional parameters
+        // to do: output view of this page
+
+
 
         echo <<<END
-			   <!DOCTYPE html>
+				<!DOCTYPE html>
                 <html lang='de'>
                 <head>
                     <meta charset='utf-8'>
@@ -99,49 +101,46 @@ class Order extends Page
                 </head>
                 <body>
                 <section>
-                    <h1>Bestellung</h1>
-                    <article>
-                        <h2>Speisekarte</h2>
+                <article>
 END;
 
-
-        foreach ($data as $row) {
-            $article_id = $row[0];
-            $name = $row[1];
-            $picture = $row[2];
-            $price = $row[3];
-
-
+        foreach($data as $row) {
+            // TODO: Fix HTML-Lint & order grouping
+            $article_id=htmlspecialchars($row[0]);
+            $name=htmlspecialchars($row[1]);
+            $picture =htmlspecialchars($row[2]);
+            $price=htmlspecialchars($row[3]);
             echo <<<END
-                        <div>
-                            <img src='$picture' height='160' width='250' alt='Pizza $name' />
-                            <p>$name</p>
-                            <p>$price €</p>
-                        </div>
+				 <div>
+                    <img src='$picture' height='160' width='250' alt='$name' />
+                    <p>$name</p>
+                     <p>$price</p>
+                </div>
 END;
         }
-            echo<<<END
-      </article>
-                </section>
-                <section>
-                    <h1>Warenkorb</h1>
-                    <form action='https://echo.fbi.h-da.de/' method='post' accept-charset='UTF-8'>
-                        <select name='pizza[]' size='3' multiple tabindex="0">
-                            <option value='margherita' selected>Pizza Margherita</option>
-                            <option value='salami'>Pizza Salami</option>
-                            <option value='hawaii'>Pizza Hawaii</option>
-                        </select>
-                        <p>14,50€</p>
-                        <label for="address">Adresse: </label>
-                        <input name='address' placeholder='Ihre Adresse' value="" required>
-                        <br/>
-                        <input type='reset' value='Alle Löschen'>
-                        <input type='button' value='Auswahl Löschen'>
-                        <input type='submit' value='Bestellen'>
-                    </form>
-                </section>
-                </body>
-                </html>
+        echo <<<END
+            </article>
+			</section>
+            <section>
+                <h1>Warenkorb</h1>
+                <form action='' method='post' accept-charset='UTF-8'>
+                    <select name='pizza[]' size='3' multiple tabindex="0">
+                        <option value='1' selected>Salami</option>
+                        <option value='2'>Vegetaria</option>
+                        <option value='3'>Spinat-Hühnchen</option>
+                    </select>
+            
+                    <p>14,50€</p>
+                    <label for="address">Adresse: </label>
+                    <input name='address' placeholder='Ihre Adresse' value="" required>
+                    <br/>
+                    <input type='reset' value='Alle Löschen'>
+                    <input type='button' value='Auswahl Löschen'>
+                    <input type='submit' value='Bestellen'>
+                </form>
+            </section>
+            </body>
+            </html>
 END;
 
         $this->generatePageFooter();
@@ -151,12 +150,41 @@ END;
      * Processes the data that comes via GET or POST.
      * If this page is supposed to do something with submitted
      * data do it here.
-	 * @return void
+     * @return void
      */
-    protected function processReceivedData():void
+    protected function processReceivedData(): void
     {
         parent::processReceivedData();
         // to do: call processReceivedData() for all members
+        if(count($_POST)) {
+            $shoppingCart[] = 0;
+            $address = "";
+
+            if(isset($_POST['pizza'])) {
+                $shoppingCart = $_POST['pizza'];
+            }
+            if(isset($_POST['address'])) {
+                $address = $_POST['address'];
+                $address = mysqli_real_escape_string($this->_database,$address);
+            }
+
+            $query1 = "INSERT INTO ordering (address) VALUES ('$address')";
+            $this->_database->query($query1);
+
+            if(isset($this->_database->insert_id)){
+                $lastOrdering_id = $this->_database->insert_id;
+                foreach ($shoppingCart as $pizza) {
+                    $lastOrdering_id = mysqli_real_escape_string($this->_database, strval($lastOrdering_id));
+                    $pizza = mysqli_real_escape_string($this->_database,strval($pizza));
+                    $query2 = "INSERT INTO ordered_article (ordering_id, article_id,status) VALUES ('$lastOrdering_id','$pizza','0')";
+                    $this->_database->query($query2);
+                }
+            }
+
+            header("HTTP/1.1 303 See Other");
+            header("Location: order.php");
+            die();
+        }
     }
 
     /**
@@ -168,15 +196,15 @@ END;
      * indicate that function as the central starting point.
      * To make it simpler this is a static function. That is you can simply
      * call it without first creating an instance of the class.
-	 * @return void
+     * @return void
      */
-    public static function main():void
+    public static function main(): void
     {
         try {
             $page = new Order();
             $page->processReceivedData();
             $page->generateView();
-        } catch (Exception $e) {
+        } catch(Exception $e) {
             //header("Content-type: text/plain; charset=UTF-8");
             header("Content-type: text/html; charset=UTF-8");
             echo $e->getMessage();
@@ -184,15 +212,13 @@ END;
     }
 }
 
-// This call is starting the creation of the page. 
+// This call is starting the creation of the page.
 // That is input is processed and output is created.
 Order::main();
 
 // Zend standard does not like closing php-tag!
-// PHP doesn't require the closing tag (it is assumed when the file ends). 
-// Not specifying the closing ? >  helps to prevent accidents 
-// like additional whitespace which will cause session 
-// initialization to fail ("headers already sent"). 
+// PHP doesn't require the closing tag (it is assumed when the file ends).
+// Not specifying the closing ? >  helps to prevent accidents
+// like additional whitespace which will cause session
+// initialization to fail ("headers already sent").
 //? >
-
-

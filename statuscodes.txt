@@ -1,0 +1,6 @@
+0 = Ordered
+1 = in Oven
+2 = done //useless
+3 = ready for delivery
+4 = on the way
+5 = delivered

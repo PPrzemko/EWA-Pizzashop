@@ -67,9 +67,9 @@
 		{
 			// to do: fetch data for this view from the database
 			// to do: return array containing data
-			$test = "SELECT a.ordering_id, a2.name, a.status a.ordered_article_id FROM ordered_article as a
+			$query = "SELECT a.ordering_id, a2.name, a.ordered_article_id, a.status FROM ordered_article as a
     				JOIN article as a2 ON a2.article_id=a.article_id";
-			$records = $this->_database->query($test)->fetch_all();
+			$records = $this->_database->query($query)->fetch_all();
 			return $records;
 		}
 		
@@ -90,6 +90,11 @@
 
 			
 			echo <<<END
+				<script>
+				setTimeout(function(){
+				   window.location.reload(1);
+				}, 10000);
+				</script>
 				<!DOCTYPE html>
 				<html lang='de'>
 				<head>
@@ -101,6 +106,7 @@
 					<title>Bäcker</title>
 				</head>
 				<body>
+
 					<form action="" method="post">
 						<section>
 							<h1>Bestellte Pizzen:</h1>
@@ -108,22 +114,41 @@
 			
 			foreach($data as $row) {
 				// TODO: Fix HTML-Lint & order grouping
-				$ordering_id=$row[0];
-				$name=$row[1];
-				$ordered_article_id =$row[2];
+				$ordering_id=htmlspecialchars($row[0]);
+				$name=htmlspecialchars($row[1]);
+				$ordered_article_id =htmlspecialchars($row[2]);
+				$status =htmlspecialchars($row[3]);
+				$statusDisplayname1="";
+				$statusDisplayname2="";
+				$statusDisplayname3="";
+				switch ($status) {
+					case 0:
+						$statusDisplayname1="checked";
+						break;
+					case 1:
+						$statusDisplayname2="checked";
+						break;
+					case 2:
+						$statusDisplayname=""; //useless
+						break;
+					case 3:
+						$statusDisplayname3="checked";
+						break;
+				}
+				
 				echo <<<END
 				 <article>
-					<fieldset>
+					<fieldset name='$ordering_id'>
 						<legend accesskey="3">Bestellung $ordering_id $name</legend>
 						
 						<label for="bestellt$ordered_article_id">Bestellt</label>
-						<input type="radio" id="bestellt$ordered_article_id" name="$ordered_article_id" value="ordered" checked> <br />
+						<input type="radio" name="$ordered_article_id" value="0" $statusDisplayname1> <br />
 						
 						<label for="inOven$ordered_article_id">Im Ofen</label>
-						<input type="radio" id="inOven$ordered_article_id" name="$ordered_article_id" value="inOven"> <br />
+						<input type="radio" name="$ordered_article_id" value="1" $statusDisplayname2> <br />
 						
 						<label for="done$ordered_article_id">Fertig</label>
-						<input type="radio" id="done$ordered_article_id" name="$ordered_article_id" value="done"> <br />
+						<input type="radio" name="$ordered_article_id" value="3" $statusDisplayname3> <br />
 					</fieldset>
 				</article>
 				END;
@@ -154,6 +179,21 @@
 
             header('Location: baker.php'); die;
 			// to do: call processReceivedData() for all members
+			
+			if(count($_POST)) {
+				//Key = ordering_id and value = status
+				foreach ($_POST as $key => $value) {
+					$key = mysqli_real_escape_string($this->_database,strval($key));
+					$value = mysqli_real_escape_string($this->_database,strval($value));
+					$query = "UPDATE ordered_article SET status = $value WHERE ordered_article_id = $key";
+					$this->_database->query($query);
+				}
+				header("HTTP/1.1 303 See Other");
+				header("Location: baker.php");
+				die();
+			}
+   
+   
 		}
 		
 		/**

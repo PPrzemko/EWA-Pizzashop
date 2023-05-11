@@ -18,17 +18,17 @@
     <article>
         <h2>Speisekarte</h2>
         <div>
-            <img src='pizza.jpg' height='160' width='250' alt='Pizza Margherita' />
+            <img src='pizza.gif' height='160' width='250' alt='Pizza Margherita' />
             <p>Margherita</p>
             <p>4,00€</p>
         </div>
         <div>
-            <img src='pizza.jpg' height='160' width='250' alt='Pizza Salami'/>
+            <img src='pizza.gif' height='160' width='250' alt='Pizza Salami'/>
             <p>Salami</p>
             <p>4,50€</p>
         </div>
         <div>
-            <img src='pizza.jpg' height='160' width='250' alt='Pizza Hawaii' />
+            <img src='pizza.gif' height='160' width='250' alt='Pizza Hawaii' />
             <p>Hawaii</p>
             <p>5,50€</p>
         <div>
