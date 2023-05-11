@@ -135,9 +135,13 @@ FROM (
                 <fieldset id="Order$ordering_id">
                     <legend accesskey="1">Bestellung $ordering_id</legend>
                     <p>Adresse: $address </p>
-
+                    
+                    <label for="ready">Bereit für Lieferung</label>
+                    <input type="radio" id="ready" name="$ordering_id" value="ready" checked> <br />
+                    
                     <label for="onTheWay">Auf dem Weg</label>
-                    <input type="radio" id="onTheWay" name="$ordering_id" value="onTheWay" checked> <br />
+                    <input type="radio" id="onTheWay" name="$ordering_id" value="onTheWay"> <br />
+                    
                     <label for="delivered">Ausgeliefert</label>
                     <input type="radio" id="delivered" name="$ordering_id" value="delivered"> <br />
                 </fieldset>
