@@ -71,7 +71,7 @@ class Driver extends Page
                 GROUP BY o.ordering_id"; */
         /*  O = Ordered
             1 = in Oven
-            2 = done
+            2 = done //useless
             3 = ready for delivery
             4 = on the way
             5 = delivered
@@ -109,6 +109,11 @@ FROM (
         $this->generatePageHeader('to do: change headline'); //to do: set optional parameters
         // to do: output view of this page
         echo <<<END
+				<script>
+                setTimeout(function(){
+                   window.location.reload(1);
+                }, 10000);
+                </script>
 				<!DOCTYPE html>
 				<html lang='de'>
 				<head>
@@ -123,12 +128,28 @@ FROM (
 					<form action="" method="post">
 						<section>
 							<h1>Fahrer:</h1>
-				END;
+END;
         foreach($data as $row) {
 
             $ordering_id=htmlspecialchars($row[0]);
             $address=htmlspecialchars($row[1]);
             $status=htmlspecialchars($row[2]);
+
+            $ready = "";
+            $onTheWay = "";
+            $delivered = "";
+            //switch case for status
+            switch ($status) {
+                case 3:
+                    $ready = "checked";
+                    break;
+                case 4:
+                    $onTheWay = "checked";
+                    break;
+                case 5:
+                    $delivered = "checked";
+                    break;
+            }
 
             echo <<<END
             <article>
@@ -137,13 +158,13 @@ FROM (
                     <p>Adresse: $address </p>
                     
                     <label for="ready">Bereit für Lieferung</label>
-                    <input type="radio" id="ready" name="$ordering_id" value="ready" checked> <br />
+                    <input type="radio" id="ready" name="$ordering_id" value="3" $ready> <br />
                     
                     <label for="onTheWay">Auf dem Weg</label>
-                    <input type="radio" id="onTheWay" name="$ordering_id" value="onTheWay"> <br />
+                    <input type="radio" id="onTheWay" name="$ordering_id" value="4" $onTheWay> <br />
                     
                     <label for="delivered">Ausgeliefert</label>
-                    <input type="radio" id="delivered" name="$ordering_id" value="delivered"> <br />
+                    <input type="radio" id="delivered" name="$ordering_id" value="5" $delivered> <br />
                 </fieldset>
             </article>
             END;
@@ -170,6 +191,18 @@ FROM (
     {
         parent::processReceivedData();
         // to do: call processReceivedData() for all members
+        if(count($_POST)) {
+            //Key = ordering_id and value = status
+            foreach ($_POST as $key => $value) {
+                $key = mysqli_real_escape_string($this->_database,strval($key));
+                $value = mysqli_real_escape_string($this->_database,strval($value));
+                $query = "UPDATE ordered_article SET status = $value WHERE ordering_id = $key";
+                $this->_database->query($query);
+            }
+            header("HTTP/1.1 303 See Other");
+            header("Location: driver.php");
+            die();
+        }
     }
 
     /**
