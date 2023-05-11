@@ -106,10 +106,10 @@ END;
 
         foreach($data as $row) {
             // TODO: Fix HTML-Lint & order grouping
-            $article_id=$row[0];
-            $name=$row[1];
-            $picture =$row[2];
-            $price=$row[3];
+            $article_id=htmlspecialchars($row[0]);
+            $name=htmlspecialchars($row[1]);
+            $picture =htmlspecialchars($row[2]);
+            $price=htmlspecialchars($row[3]);
             echo <<<END
 				 <div>
                     <img src='$picture' height='160' width='250' alt='$name' />
@@ -123,11 +123,11 @@ END;
 			</section>
             <section>
                 <h1>Warenkorb</h1>
-                <form action='https://echo.fbi.h-da.de/' method='post' accept-charset='UTF-8'>
+                <form action='' method='post' accept-charset='UTF-8'>
                     <select name='pizza[]' size='3' multiple tabindex="0">
-                        <option value='margherita' selected>Pizza Margherita</option>
-                        <option value='salami'>Pizza Salami</option>
-                        <option value='hawaii'>Pizza Hawaii</option>
+                        <option value='1' selected>Salami</option>
+                        <option value='2'>Vegetaria</option>
+                        <option value='3'>Spinat-Hühnchen</option>
                     </select>
             
                     <p>14,50€</p>
@@ -156,6 +156,35 @@ END;
     {
         parent::processReceivedData();
         // to do: call processReceivedData() for all members
+        if(count($_POST)) {
+            $shoppingCart[] = 0;
+            $address = "";
+
+            if(isset($_POST['pizza'])) {
+                $shoppingCart = $_POST['pizza'];
+            }
+            if(isset($_POST['address'])) {
+                $address = $_POST['address'];
+                $address = mysqli_real_escape_string($this->_database,$address);
+            }
+
+            $query1 = "INSERT INTO ordering (address) VALUES ('$address')";
+            $this->_database->query($query1);
+
+            if(isset($this->_database->insert_id)){
+                $lastOrdering_id = $this->_database->insert_id;
+                foreach ($shoppingCart as $pizza) {
+                    $lastOrdering_id = mysqli_real_escape_string($this->_database, strval($lastOrdering_id));
+                    $pizza = mysqli_real_escape_string($this->_database,strval($pizza));
+                    $query2 = "INSERT INTO ordered_article (ordering_id, article_id,status) VALUES ('$lastOrdering_id','$pizza','0')";
+                    $this->_database->query($query2);
+                }
+            }
+
+            header("HTTP/1.1 303 See Other");
+            header("Location: order.php");
+            die();
+        }
     }
 
     /**
