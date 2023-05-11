@@ -29,7 +29,7 @@
 	 * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
 	 * @author   Ralf Hahn, <ralf.hahn@h-da.de>
 	 */
-	class PageTemplate extends Page
+	class Baker extends Page
 	{
 		// to do: declare reference variables for members
 		// representing substructures/blocks
@@ -165,7 +165,7 @@
 		public static function main(): void
 		{
 			try {
-				$page = new PageTemplate();
+				$page = new Baker();
 				$page->processReceivedData();
 				$page->generateView();
 			} catch(Exception $e) {
@@ -178,7 +178,7 @@
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-	PageTemplate::main();
+	Baker::main();
 	
 	// Zend standard does not like closing php-tag!
 	// PHP doesn't require the closing tag (it is assumed when the file ends).
