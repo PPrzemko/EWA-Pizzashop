@@ -126,9 +126,9 @@ FROM (
 				END;
         foreach($data as $row) {
 
-            $ordering_id=$row[0];
-            $address=$row[1];
-            $status=$row[2];
+            $ordering_id=htmlspecialchars($row[0]);
+            $address=htmlspecialchars($row[1]);
+            $status=htmlspecialchars($row[2]);
 
             echo <<<END
             <article>
