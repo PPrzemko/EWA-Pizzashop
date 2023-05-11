@@ -67,9 +67,9 @@
 		{
 			// to do: fetch data for this view from the database
 			// to do: return array containing data
-			$test = "SELECT a.ordering_id, a2.name, a.ordered_article_id FROM ordered_article as a
+			$query = "SELECT a.ordering_id, a2.name, a.ordered_article_id FROM ordered_article as a
     				JOIN article as a2 ON a2.article_id=a.article_id";
-			$records = $this->_database->query($test)->fetch_all();
+			$records = $this->_database->query($query)->fetch_all();
 			return $records;
 		}
 		
@@ -108,9 +108,9 @@
 			
 			foreach($data as $row) {
 				// TODO: Fix HTML-Lint & order grouping
-				$ordering_id=$row[0];
-				$name=$row[1];
-				$ordered_article_id =$row[2];
+				$ordering_id=htmlspecialchars($row[0]);
+				$name=htmlspecialchars($row[1]);
+				$ordered_article_id =htmlspecialchars($row[2]);
 				echo <<<END
 				 <article>
 					<fieldset>
