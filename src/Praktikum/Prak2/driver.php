@@ -135,6 +135,7 @@ END;
             $ordering_id=htmlspecialchars($row[0]);
             $address=htmlspecialchars($row[1]);
             $status=htmlspecialchars($row[2]);
+            $total_price=htmlspecialchars(number_format(floatval($row[3]), 2));
 
             $ready = "";
             $onTheWay = "";
@@ -157,6 +158,7 @@ END;
                 <fieldset id="Order$ordering_id">
                     <legend accesskey="1">Bestellung $ordering_id</legend>
                     <p>Adresse: $address </p>
+                    <p>Preis: $total_price €</p>
                     
                     <label for="ready">Bereit für Lieferung</label>
                     <input type="radio" id="ready" name="$ordering_id" value="3" $ready> <br />
