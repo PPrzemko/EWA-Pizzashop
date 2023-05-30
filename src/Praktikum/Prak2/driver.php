@@ -191,18 +191,21 @@ END;
     {
         parent::processReceivedData();
         // to do: call processReceivedData() for all members
-        if(count($_POST)) {
-            //Key = ordering_id and value = status
-            foreach ($_POST as $key => $value) {
-                $key = mysqli_real_escape_string($this->_database,strval($key));
-                $value = mysqli_real_escape_string($this->_database,strval($value));
-                $query = "UPDATE ordered_article SET status = $value WHERE ordering_id = $key";
-                $this->_database->query($query);
+        if(isset($_POST)){
+            if(count($_POST)) {
+                //Key = ordering_id and value = status
+                foreach ($_POST as $key => $value) {
+                    $key = mysqli_real_escape_string($this->_database,strval($key));
+                    $value = mysqli_real_escape_string($this->_database,strval($value));
+                    $query = "UPDATE ordered_article SET status = $value WHERE ordering_id = $key";
+                    $this->_database->query($query);
+                }
+                header("HTTP/1.1 303 See Other");
+                header("Location: driver.php");
+                die();
             }
-            header("HTTP/1.1 303 See Other");
-            header("Location: driver.php");
-            die();
         }
+
     }
 
     /**
