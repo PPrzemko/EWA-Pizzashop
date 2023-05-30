@@ -76,14 +76,15 @@ class Driver extends Page
             4 = on the way
             5 = delivered
         */
-        $queryOrdersReadyToDeliver = "SELECT t1.ordering_id, t2.address, t1.status
+        $queryOrdersReadyToDeliver = "SELECT oa.ordering_id, o.address, oa.status, oa.total_price
 FROM (
-         SELECT ordering_id, status, COUNT(*) AS total_parts, SUM(CASE WHEN status >= 3 THEN 1 ELSE 0 END) AS completed_parts
-         FROM ordered_article
-         GROUP BY ordering_id
-         HAVING total_parts = completed_parts
-     ) t1
-         JOIN ordering t2 ON t1.ordering_id = t2.ordering_id";
+         SELECT oa.ordering_id,oa.status, MAX(oa.status) AS max_status, SUM(a.price) AS total_price
+         FROM ordered_article oa
+                  JOIN article a ON oa.article_id = a.article_id
+         GROUP BY oa.ordering_id
+         HAVING MIN(oa.status) >= 4 AND MAX(oa.status) >= 4
+     ) oa
+         JOIN ordering o ON oa.ordering_id = o.ordering_id";
 
         $recordsOrdersReadyToDeliver = $this->_database->query($queryOrdersReadyToDeliver)->fetch_all();
         foreach ($recordsOrdersReadyToDeliver as $row){
