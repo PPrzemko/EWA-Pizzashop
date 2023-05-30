@@ -82,7 +82,7 @@ FROM (
          FROM ordered_article oa
                   JOIN article a ON oa.article_id = a.article_id
          GROUP BY oa.ordering_id
-         HAVING MIN(oa.status) >= 4 AND MAX(oa.status) >= 4
+         HAVING MIN(oa.status) >= 3 AND MAX(oa.status) <= 4
      ) oa
          JOIN ordering o ON oa.ordering_id = o.ordering_id";
 
