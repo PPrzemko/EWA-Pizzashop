@@ -68,7 +68,8 @@
 			// to do: fetch data for this view from the database
 			// to do: return array containing data
 			$query = "SELECT a.ordering_id, a2.name, a.ordered_article_id, a.status FROM ordered_article as a
-    				JOIN article as a2 ON a2.article_id=a.article_id";
+    				JOIN article as a2 ON a2.article_id=a.article_id
+    				WHERE a.status<4";
 			$records = $this->_database->query($query);
             $result = $records->fetch_all();
             $records->free();

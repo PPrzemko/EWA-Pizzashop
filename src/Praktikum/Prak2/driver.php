@@ -76,14 +76,15 @@ class Driver extends Page
             4 = on the way
             5 = delivered
         */
-        $queryOrdersReadyToDeliver = "SELECT t1.ordering_id, t2.address, t1.status
+        $queryOrdersReadyToDeliver = "SELECT oa.ordering_id, o.address, oa.status, oa.total_price
 FROM (
-         SELECT ordering_id, status, COUNT(*) AS total_parts, SUM(CASE WHEN status >= 3 THEN 1 ELSE 0 END) AS completed_parts
-         FROM ordered_article
-         GROUP BY ordering_id
-         HAVING total_parts = completed_parts
-     ) t1
-         JOIN ordering t2 ON t1.ordering_id = t2.ordering_id";
+         SELECT oa.ordering_id,oa.status, MAX(oa.status) AS max_status, SUM(a.price) AS total_price
+         FROM ordered_article oa
+                  JOIN article a ON oa.article_id = a.article_id
+         GROUP BY oa.ordering_id
+         HAVING MIN(oa.status) >= 3 AND MAX(oa.status) <= 4
+     ) oa
+         JOIN ordering o ON oa.ordering_id = o.ordering_id";
 
         $recordsOrdersReadyToDeliver = $this->_database->query($queryOrdersReadyToDeliver)->fetch_all();
         foreach ($recordsOrdersReadyToDeliver as $row){
@@ -134,6 +135,7 @@ END;
             $ordering_id=htmlspecialchars($row[0]);
             $address=htmlspecialchars($row[1]);
             $status=htmlspecialchars($row[2]);
+            $total_price=htmlspecialchars(number_format(floatval($row[3]), 2));
 
             $ready = "";
             $onTheWay = "";
@@ -156,6 +158,7 @@ END;
                 <fieldset id="Order$ordering_id">
                     <legend accesskey="1">Bestellung $ordering_id</legend>
                     <p>Adresse: $address </p>
+                    <p>Preis: $total_price €</p>
                     
                     <label for="ready">Bereit für Lieferung</label>
                     <input type="radio" id="ready" name="$ordering_id" value="3" $ready> <br />
@@ -191,18 +194,21 @@ END;
     {
         parent::processReceivedData();
         // to do: call processReceivedData() for all members
-        if(count($_POST)) {
-            //Key = ordering_id and value = status
-            foreach ($_POST as $key => $value) {
-                $key = mysqli_real_escape_string($this->_database,strval($key));
-                $value = mysqli_real_escape_string($this->_database,strval($value));
-                $query = "UPDATE ordered_article SET status = $value WHERE ordering_id = $key";
-                $this->_database->query($query);
+        if(isset($_POST)){
+            if(count($_POST)) {
+                //Key = ordering_id and value = status
+                foreach ($_POST as $key => $value) {
+                    $key = mysqli_real_escape_string($this->_database,strval($key));
+                    $value = mysqli_real_escape_string($this->_database,strval($value));
+                    $query = "UPDATE ordered_article SET status = $value WHERE ordering_id = $key";
+                    $this->_database->query($query);
+                }
+                header("HTTP/1.1 303 See Other");
+                header("Location: driver.php");
+                die();
             }
-            header("HTTP/1.1 303 See Other");
-            header("Location: driver.php");
-            die();
         }
+
     }
 
     /**
