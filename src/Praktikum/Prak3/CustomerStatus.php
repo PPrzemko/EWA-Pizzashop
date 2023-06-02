@@ -69,15 +69,16 @@ class CustomerStatus extends Page
         // to do: return array containing data
         #TODO: Ordering ID will be given over session
         session_start();
-        $givenid = $_SESSION["orderingID"];
-        if(!isset($givenid)){
-            return [];
-        }
-        $orderingid=mysqli_real_escape_string($this->_database,$givenid);
-        $query = "SELECT a.status, a2.name FROM ordered_article as a
+        $records = array();
+        if(isset($_SESSION["orderingID"])){
+            $givenid = $_SESSION["orderingID"];
+            $orderingid=mysqli_real_escape_string($this->_database,$givenid);
+            $query = "SELECT a.status, a2.name FROM ordered_article as a
 						JOIN article as a2 ON a2.article_id=a.article_id
 						WHERE ordering_id='$orderingid'";
-        $records = $this->_database->query($query)->fetch_all();
+            $records = $this->_database->query($query)->fetch_all();
+        }
+
         return $records;
     }
 
@@ -94,7 +95,11 @@ class CustomerStatus extends Page
         header("Content-Type: application/json; charset=UTF-8");
         $data = $this->getViewData();
         $arr = array();
+        if(!isset($data)){
+            return;
+        }
         foreach($data as $row) {
+            //TODO: maybe if(isset())
             $status = htmlspecialchars($row[0]);
             $pizza = htmlspecialchars($row[1]);
             $statusDisplayname = "error";
