@@ -67,9 +67,18 @@ class CustomerStatus extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        $queryArticles = "";
-        $recordsArticles = $this->_database->query($queryArticles)->fetch_all();
-        return $recordsArticles;
+        #TODO: Ordering ID will be given over session
+        session_start();
+        $givenid = $_SESSION["orderingID"];
+        if(!isset($givenid)){
+            return [];
+        }
+        $orderingid=mysqli_real_escape_string($this->_database,$givenid);
+        $query = "SELECT a.status, a2.name FROM ordered_article as a
+						JOIN article as a2 ON a2.article_id=a.article_id
+						WHERE ordering_id='$orderingid'";
+        $records = $this->_database->query($query)->fetch_all();
+        return $records;
     }
 
     /**
@@ -82,7 +91,40 @@ class CustomerStatus extends Page
      */
     protected function generateView(): void
     {
-        //TODO JSON
+        header("Content-Type: application/json; charset=UTF-8");
+        $data = $this->getViewData();
+        $arr = array();
+        foreach($data as $row) {
+            $status = htmlspecialchars($row[0]);
+            $pizza = htmlspecialchars($row[1]);
+            $statusDisplayname = "error";
+            switch ($status) {
+                case 0:
+                    $statusDisplayname = "Bestellt";
+                    break;
+                case 1:
+                    $statusDisplayname = "Im Backofen";
+                    break;
+                case 2:
+                    $statusDisplayname = "Useless";
+                    break;
+                case 3:
+                    $statusDisplayname = "bereit zu lieferung";
+                    break;
+                case 4:
+                    $statusDisplayname = "auf dem weg";
+                    break;
+                case 5:
+                    $statusDisplayname = "geliefert";
+                    break;
+            }
+            $asArr = array();
+            $asArr[] = $pizza;
+            $asArr[] = $statusDisplayname;
+            array_push($arr,$asArr);
+        }
+        $serializedData = json_encode($arr);
+        echo $serializedData;
     }
 
     /**
