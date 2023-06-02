@@ -187,7 +187,7 @@ END;
             }
 
             header("HTTP/1.1 303 See Other");
-            header("Location: order.php");
+            header("Location: customer.php");
             die();
         }
     }
