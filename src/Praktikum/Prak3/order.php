@@ -82,6 +82,9 @@ class Order extends Page
      */
     protected function generateView(): void
     {
+        //TODO: Delete default orderid set used to debug
+        session_start();
+        $_SESSION["orderingID"] = "16";
         $data = $this->getViewData();
         $this->generatePageHeader('to do: change headline'); //to do: set optional parameters
         // to do: output view of this page
@@ -105,7 +108,6 @@ class Order extends Page
 END;
 
         foreach($data as $row) {
-            // TODO: Fix HTML-Lint & order grouping
             $article_id=htmlspecialchars($row[0]);
             $name=htmlspecialchars($row[1]);
             $picture =htmlspecialchars($row[2]);
@@ -170,18 +172,19 @@ END;
 
             $query1 = "INSERT INTO ordering (address) VALUES ('$address')";
             $this->_database->query($query1);
-
+            $lastOrdering_id = $this->_database->insert_id;
             if(isset($this->_database->insert_id)){
-                $lastOrdering_id = $this->_database->insert_id;
                 foreach ($shoppingCart as $pizza) {
                     $lastOrdering_id = mysqli_real_escape_string($this->_database, strval($lastOrdering_id));
                     $pizza = mysqli_real_escape_string($this->_database,strval($pizza));
                     $query2 = "INSERT INTO ordered_article (ordering_id, article_id,status) VALUES ('$lastOrdering_id','$pizza','0')";
-                    $this->_database->query($query2);
+                    $inserted=$this->_database->query($query2);
                 }
             }
             session_start();
-            
+            if(isset($lastOrdering_id)){
+                $_SESSION["orderingID"] = $lastOrdering_id;
+            }
 
             header("HTTP/1.1 303 See Other");
             header("Location: order.php");

@@ -51,7 +51,11 @@
 			// to do: fetch data for this view from the database
 			// to do: return array containing data
 			#TODO: Ordering ID will be given over session
-			$givenid="17";
+            session_start();
+            $givenid = $_SESSION["orderingID"];
+            if(!isset($givenid)){
+                return [];
+            }
 			$orderingid=mysqli_real_escape_string($this->_database,$givenid);
 			$query = "SELECT a.status, a2.name FROM ordered_article as a
 						JOIN article as a2 ON a2.article_id=a.article_id
@@ -70,6 +74,7 @@
 		 */
 		protected function generateView():void
 		{
+
 			$data = $this->getViewData();
 			$this->generatePageHeader('to do: change headline'); //to do: set optional parameters
 			echo <<<END
