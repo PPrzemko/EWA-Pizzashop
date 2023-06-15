@@ -54,6 +54,8 @@
             session_start();
             $givenid = $_SESSION["orderingID"];
             if(!isset($givenid)){
+				header("HTTP/1.1 303 See Other");
+				header("Location: order.php");
                 return [];
             }
 			$orderingid=mysqli_real_escape_string($this->_database,$givenid);
