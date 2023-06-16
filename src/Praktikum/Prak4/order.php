@@ -87,24 +87,27 @@ class Order extends Page
         $_SESSION["orderingID"] = "16";
         $data = $this->getViewData();
         $this->generatePageHeader('to do: change headline'); //to do: set optional parameters
-        // to do: output view of this page
+
+
+
 
 
 
         echo <<<END
+              
 				<!DOCTYPE html>
                 <html lang='de'>
                 <head>
                     <meta charset='utf-8'>
                     <!-- für später: CSS include -->
                     <!-- <link rel="stylesheet" href="XXX.css"/> -->
-                    <!-- für später: JavaScript include -->
-                    <!-- <script src="XXX.js"></script> -->
+                    
+                    <script type="text/javascript" src="order.js"></script>
                     <title>PIZZA</title>
                 </head>
-                <body>
+                <body onload="sumbitBlocker()">
                 <section>
-                <article>
+                <article id="test">
 END;
 
         foreach($data as $row) {
@@ -114,7 +117,7 @@ END;
             $price=htmlspecialchars($row[3]);
             echo <<<END
 				 <div>
-                    <img src='$picture' height='160' width='250' alt='$name' />
+                    <img src='$picture' id="$article_id" height='160' width='250' alt='$name' onclick="addToShoppingCart($article_id)" data-name="$name" data-price="$price" />
                     <p>$name</p>
                      <p>$price</p>
                 </div>
@@ -126,19 +129,17 @@ END;
             <section>
                 <h1>Warenkorb</h1>
                 <form action='' method='post' accept-charset='UTF-8'>
-                    <select name='pizza[]' size='3' multiple tabindex="0">
-                        <option value='1' selected>Salami</option>
-                        <option value='2'>Vegetaria</option>
-                        <option value='3'>Spinat-Hühnchen</option>
+                    <select name='pizza[]' size='3' multiple tabindex="0" id="cart">
+
                     </select>
             
-                    <p>14,50€</p>
+                    <p id="totalprice">14,50€</p>
                     <label for="address">Adresse: </label>
-                    <input name='address' placeholder='Ihre Adresse' value="" required>
+                    <input id="address" name='address' placeholder='Ihre Adresse' value="" required>
                     <br/>
-                    <input type='reset' value='Alle Löschen'>
-                    <input type='button' value='Auswahl Löschen'>
-                    <input type='submit' value='Bestellen'>
+                    <input type='reset' value='Alle Löschen' onclick="deleteAllCartItems()">
+                    <input type='button' value='Auswahl Löschen' onclick="deleteSelectedCartItems()">
+                    <input id="submit" type='submit' value='Bestellen' disabled>
                 </form>
             </section>
             </body>
