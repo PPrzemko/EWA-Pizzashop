@@ -87,52 +87,14 @@
                     <!-- für später: CSS include -->
                     <!-- <link rel="stylesheet" href="XXX.css"/> -->
                     <!-- für später: JavaScript include -->
-                    <!-- <script src="XXX.js"></script> -->
+                    <script type="text/javascript" src="customer.js"></script>
                     <title>Kunde</title>
                 </head>
-                <body>
-                    <section>
-                        <h1>Deine Bestellung:</h1>
-END;
-			/*
-		  O = Ordered
-		  1 = in Oven
-		  2 = done
-		  3 = ready for delivery
-		  4 = on the way
-		  5 = delivered
-	  */
-                foreach($data as $row) {
-					$status=htmlspecialchars($row[0]);
-					$pizza=htmlspecialchars($row[1]);
-					$statusDisplayname="error";
-					switch ($status) {
-						case 0:
-							$statusDisplayname="Bestellt";
-							break;
-						case 1:
-							$statusDisplayname="Im Backofen";
-							break;
-						case 2:
-							$statusDisplayname="Useless";
-							break;
-						case 3:
-							$statusDisplayname="bereit zu lieferung";
-							break;
-						case 4:
-							$statusDisplayname="auf dem weg";
-							break;
-						case 5:
-							$statusDisplayname="geliefert";
-							break;
-					}
-					
-					
-					echo <<<END
-                            <p>$pizza: $statusDisplayname</p>
-END;
-				}
-					echo <<<END
+                <body onload="onload()">
+                <h1>Deine Bestellung:</h1>
+                    <section id="orderdArticles">
+                    
+
                     </section>
                 
                     <input type="button" value="Neue Bestellung" />

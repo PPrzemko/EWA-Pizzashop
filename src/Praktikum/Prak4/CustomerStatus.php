@@ -67,7 +67,6 @@ class CustomerStatus extends Page
     {
         // to do: fetch data for this view from the database
         // to do: return array containing data
-        #TODO: Ordering ID will be given over session
         session_start();
         $records = array();
         if(isset($_SESSION["orderingID"])){
