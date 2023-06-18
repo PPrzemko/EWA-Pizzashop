@@ -126,7 +126,7 @@ FROM (
 					<title>Fahrer</title>
 				</head>
 				<body>
-					<form action="" method="post">
+					<form action="" method="post" id="form84">
 						<section>
 							<h1>Fahrer:</h1>
 END;
@@ -161,13 +161,13 @@ END;
                     <p>Preis: $total_price €</p>
                     
                     <label for="ready">Bereit für Lieferung</label>
-                    <input type="radio" id="ready" name="$ordering_id" value="3" $ready> <br />
+                    <input type="radio" id="ready" name="$ordering_id" value="3" $ready onclick="document.forms['form84'].submit();"> <br />
                     
                     <label for="onTheWay">Auf dem Weg</label>
-                    <input type="radio" id="onTheWay" name="$ordering_id" value="4" $onTheWay> <br />
+                    <input type="radio" id="onTheWay" name="$ordering_id" value="4" $onTheWay onclick="document.forms['form84'].submit();"> <br />
                     
                     <label for="delivered">Ausgeliefert</label>
-                    <input type="radio" id="delivered" name="$ordering_id" value="5" $delivered> <br />
+                    <input type="radio" id="delivered" name="$ordering_id" value="5" $delivered onclick="document.forms['form84'].submit();"> <br />
                 </fieldset>
             </article>
             END;
@@ -175,7 +175,6 @@ END;
 
         echo <<<END
 			        </section>
-			<input type="submit" value="Absenden" />
 				</form>
 			</body>
 			</html>
