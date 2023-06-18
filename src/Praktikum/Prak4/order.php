@@ -105,7 +105,7 @@ class Order extends Page
                     <script type="text/javascript" src="order.js"></script>
                     <title>PIZZA</title>
                 </head>
-                <body onload="sumbitBlocker()">
+                <body onload="onload()">
                 <section>
                 <article id="test">
 END;
@@ -128,7 +128,7 @@ END;
 			</section>
             <section>
                 <h1>Warenkorb</h1>
-                <form action='' method='post' accept-charset='UTF-8'>
+                <form id="form234" action='' method='post' accept-charset='UTF-8'>
                     <select name='pizza[]' size='3' multiple tabindex="0" id="cart">
 
                     </select>
@@ -139,7 +139,7 @@ END;
                     <br/>
                     <input type='reset' value='Alle Löschen' onclick="deleteAllCartItems()">
                     <input type='button' value='Auswahl Löschen' onclick="deleteSelectedCartItems()">
-                    <input id="submit" type='submit' value='Bestellen' disabled>
+                    <input id="btnsubmit" type='button' value='Bestellen' disabled onclick="changeSelected();">
                 </form>
             </section>
             </body>

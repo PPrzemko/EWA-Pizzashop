@@ -1,3 +1,7 @@
+function onload(){
+    addressEventListener();
+}
+
 function addToShoppingCart(articleid) {
     const cart = document.getElementById("cart");
 
@@ -5,22 +9,24 @@ function addToShoppingCart(articleid) {
     let name = element2.getAttribute("data-name");
     let  price = element2.getAttribute("data-price");
 
-
     const optionElement = document.createElement("option");
     optionElement.value = articleid;
     optionElement.text = name;
+    //optionElement.selected = true;
     optionElement.setAttribute("data-price", price);
     cart.appendChild(optionElement);
-    totalAmount()
+    totalAmount();
+    btnblock();
 }
 
 function totalAmount(){
     const element = document.getElementById("totalprice");
     let total = 0;
     const cart = document.getElementById("cart");
-    for (let i = 0; i < cart.length; i++) {
-        total += parseFloat(cart[i].getAttribute("data-price"));
-    }
+
+    Array.from(cart).forEach(function (item) {
+        total += parseFloat(item.getAttribute("data-price"));
+    });
     element.textContent = total.toFixed(2);
 }
 
@@ -32,35 +38,48 @@ function deleteAllCartItems(){
 
 function deleteSelectedCartItems(){
     const cart = document.getElementById("cart");
+    /*
     for (let i = cart.length - 1; i >= 0; i--) {
         if (cart[i].selected) {
             cart.remove(i);
         }
     }
+    */
+    Array.from(cart).forEach(function (item) {
+        if(item.selected){
+            cart.remove(item);
+        }
+    });
     totalAmount();
 }
 
-function sumbitBlocker(){
-    const submitButton = document.getElementById("submit");
+function addressEventListener(){
+    const address = document.getElementById("address");
+    address.addEventListener("change", btnblock);
+}
+
+function btnblock(){
     const cart = document.getElementById("cart");
     const address = document.getElementById("address");
+    const submitButton = document.getElementById("btnsubmit");
 
-    // add eventlister
+    if (cart.length === 0 || address.value === "") {
+        submitButton.disabled = true;
+    }else{
+        submitButton.disabled = false;
+    }
+}
 
-    address.addEventListener("change", function () {
-        if (cart.length === 0 || address.value === "") {
-            submitButton.disabled = true;
-        }else{
-            submitButton.disabled = false;
-        }
+function changeSelected(){
+    // called in sumbit
+    var form = document.getElementById("form234");
+    var cart = document.getElementById("cart");
+    var submitButton = document.getElementById("btnsubmit");
+
+    Array.from(cart).forEach(function (item) {
+        item.selected = true;
     });
 
-    // add cart event listerner
-    cart.addEventListener("change", function () {
-        if (cart.length === 0 || address.value === "") {
-            submitButton.disabled = true;
-        }else{
-            submitButton.disabled = false;
-        }
-    });
+    document.forms["form234"].submit();
+
 }
