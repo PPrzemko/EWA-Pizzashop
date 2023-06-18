@@ -1,8 +1,9 @@
+// Authors: Antonia Berg, Julia Hillmann, Fynn Fabian Fröhlich
 function onload(){
-    logJSONData();
-    window.setInterval (logJSONData, 4000)
+    updateXHRsite();
+    window.setInterval (updateXHRsite, 4000)
 }
-async function logJSONData() {
+async function updateXHRsite() {
     const response = await fetch("CustomerStatus.php");
     const jsonData = await response.json();
     const articleList = document.getElementById("orderdArticles");
@@ -12,6 +13,5 @@ async function logJSONData() {
         article.textContent = item[0] + " : " +  item[1];
         articleList.appendChild(article);
     });
-    
-
 }
+
