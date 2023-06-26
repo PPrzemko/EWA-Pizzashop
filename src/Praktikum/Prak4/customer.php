@@ -84,8 +84,7 @@
                 <html lang='de'>
                 <head>
                     <meta charset='utf-8'>
-                    <!-- für später: CSS include -->
-                    <!-- <link rel="stylesheet" href="XXX.css"/> -->
+                    <link rel="stylesheet" href="styleCustomer.css"/>
                     <!-- für später: JavaScript include -->
                     <script type="text/javascript" src="customer.js"></script>
                     <title>Kunde</title>

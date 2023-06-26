@@ -84,7 +84,7 @@ abstract class Page
 <head>
 	<meta charset="UTF-8"/>
     <title>$title</title>
-    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="styleOrder.css"/>
     $js
     $refresh
 </head>

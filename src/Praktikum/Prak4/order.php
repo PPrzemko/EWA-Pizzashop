@@ -99,9 +99,7 @@ class Order extends Page
                 <html lang='de'>
                 <head>
                     <meta charset='utf-8'>
-                    <!-- für später: CSS include -->
-                    <!-- <link rel="stylesheet" href="XXX.css"/> -->
-                    
+                    <link rel="stylesheet" href="styleOrder.css"/>
                     <script type="text/javascript" src="order.js"></script>
                     <title>PIZZA</title>
                 </head>
