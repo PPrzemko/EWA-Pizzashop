@@ -1,0 +1,38 @@
+/* General styles */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+section {
+    margin: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+p {
+    margin: 0;
+}
+
+input[type="button"] {
+    margin: 20px;
+}
+
+/* Media queries */
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 400px) {
+    section {
+        margin: 10px;
+    }
+}
