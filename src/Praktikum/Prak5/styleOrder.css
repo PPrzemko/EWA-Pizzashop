@@ -1,0 +1,71 @@
+/* General styles */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+section {
+    margin: 20px;
+}
+
+article div {
+    display: inline-block;
+    text-align: center;
+    margin: 10px;
+}
+
+img {
+    cursor: pointer;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+select {
+    width: 250px;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="reset"],
+input[type="button"],
+input[type="submit"] {
+    margin-top: 10px;
+}
+
+#submit:disabled {
+    background-color: lightgray;
+    cursor: not-allowed;
+}
+
+/* Media queries */
+
+@media (max-width: 600px) {
+    article div {
+        display: block;
+        margin: 10px auto;
+    }
+
+    img {
+        display: block;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 400px) {
+    img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 320px) {
+    h1 {
+        font-size: 20px;
+    }
+}
