@@ -52,18 +52,20 @@
 			// to do: return array containing data
 			#TODO: Ordering ID will be given over session
             session_start();
-            $givenid = $_SESSION["orderingID"];
-            if(!isset($givenid)){
-				header("HTTP/1.1 303 See Other");
-				header("Location: order.php");
-                return [];
-            }
-			$orderingid=mysqli_real_escape_string($this->_database,$givenid);
-			$query = "SELECT a.status, a2.name FROM ordered_article as a
+            
+            if(isset($_SESSION["orderingID"])){
+				$givenid = $_SESSION["orderingID"];
+				$orderingid=mysqli_real_escape_string($this->_database,$givenid);
+				$query = "SELECT a.status, a2.name FROM ordered_article as a
 						JOIN article as a2 ON a2.article_id=a.article_id
 						WHERE ordering_id='$orderingid'";
-			$records = $this->_database->query($query)->fetch_all();
-			return $records;
+				$records = $this->_database->query($query)->fetch_all();
+				return $records;
+            }else{
+				header('Location: order.php');
+				return array();
+			}
+			
 		}
 		
 		/**
@@ -96,7 +98,7 @@
 
                     </section>
                 
-                    <input type="button" value="Neue Bestellung" />
+                    <input type="button" value="Neue Bestellung" onclick='window.location.href="order.php"' />
                 </body>
                 </html>
 END;

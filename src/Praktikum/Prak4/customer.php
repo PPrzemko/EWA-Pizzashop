@@ -96,7 +96,7 @@
 
                     </section>
                 
-                    <input type="button" value="Neue Bestellung" />
+                    <input type="button" value="Neue Bestellung"  />
                 </body>
                 </html>
 END;

@@ -110,7 +110,7 @@
 				</head>
 				<body>
 
-					<form action="" method="post" id="form11">
+					<form method="post" id="form11">
 						<section>
 							<h1>Bestellte Pizzen:</h1>
 				END;
@@ -142,16 +142,16 @@
 				echo <<<END
 				 <article>
 					<fieldset name='$ordering_id'>
-						<legend accesskey="3">Bestellung $ordering_id $name</legend>
+						<h2>Bestellung $ordering_id $name</h2>
 						
 						<label for="bestellt$ordered_article_id">Bestellt</label>
-						<input type="radio" name="$ordered_article_id" value="0" $statusDisplayname1 onclick="document.forms['form11'].submit();"> <br />
+						<input type="radio" id="bestellt$ordered_article_id" name="$ordered_article_id" value="0" $statusDisplayname1 onclick="document.forms['form11'].submit();"> <br />
 						
 						<label for="inOven$ordered_article_id">Im Ofen</label>
-						<input type="radio" name="$ordered_article_id" value="1" $statusDisplayname2 onclick="document.forms['form11'].submit();"> <br />
+						<input type="radio" id="inOven$ordered_article_id" name="$ordered_article_id" value="1" $statusDisplayname2 onclick="document.forms['form11'].submit();"> <br />
 						
 						<label for="done$ordered_article_id">Fertig</label>
-						<input type="radio" name="$ordered_article_id" value="3" $statusDisplayname3 onclick="document.forms['form11'].submit();"> <br />
+						<input type="radio" id="done$ordered_article_id" name="$ordered_article_id" value="3" $statusDisplayname3 onclick="document.forms['form11'].submit();"> <br />
 					</fieldset>
 				</article>
 				END;

@@ -82,9 +82,7 @@ class Order extends Page
      */
     protected function generateView(): void
     {
-        //TODO: Delete default orderid set used to debug
         session_start();
-        $_SESSION["orderingID"] = "16";
         $data = $this->getViewData();
         $this->generatePageHeader('to do: change headline'); //to do: set optional parameters
 
@@ -106,6 +104,7 @@ class Order extends Page
                 <body onload="onload()">
                 <section>
                 <article id="test">
+				<div class="container">
 END;
 
         foreach($data as $row) {
@@ -114,7 +113,7 @@ END;
             $picture =htmlspecialchars($row[2]);
             $price=htmlspecialchars($row[3]);
             echo <<<END
-				 <div>
+				 <div class="item">
                     <img src='$picture' id="$article_id" height='160' width='250' alt='$name' onclick="addToShoppingCart($article_id)" data-name="$name" data-price="$price" />
                     <p>$name</p>
                      <p>$price</p>
@@ -122,9 +121,11 @@ END;
 END;
         }
         echo <<<END
+			</div>
             </article>
 			</section>
-            <section>
+			
+            <aside class="cart-section">
                 <h1>Warenkorb</h1>
                 <form id="form234" action='' method='post' accept-charset='UTF-8'>
                     <select name='pizza[]' size='3' multiple tabindex="0" id="cart">
@@ -139,7 +140,8 @@ END;
                     <input type='button' value='Auswahl Löschen' onclick="deleteSelectedCartItems()">
                     <input id="btnsubmit" type='button' value='Bestellen' disabled onclick="changeSelected();">
                 </form>
-            </section>
+            </aside>
+            </div>
             </body>
             </html>
 END;

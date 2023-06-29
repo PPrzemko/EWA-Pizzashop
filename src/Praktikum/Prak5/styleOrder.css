@@ -1,71 +1,53 @@
-/* General styles */
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+.container {
+    display: flex;
+    flex-wrap: wrap;
 }
 
-section {
-    margin: 20px;
+.item {
+    width: 15.625em;
+    margin: 0.625em;
 }
 
-article div {
-    display: inline-block;
-    text-align: center;
-    margin: 10px;
+/* Added CSS for the sidebar */
+.cart-section {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 18.75em;
+    height: 100%;
+    background-color: #f2f2f2;
+    padding: 1.25em;
+    overflow-y: auto;
+    z-index: 99; /* Ensure the cart is above the items */
+    transition: transform 0.3s ease; /* Add transition for smooth animation */
 }
 
-img {
-    cursor: pointer;
+/* Adjusted CSS for the form elements inside the sidebar */
+.cart-section form {
+    display: flex;
+    flex-direction: column;
 }
 
-h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
+/* Adjusted CSS for the submit button */
+.cart-section #btnsubmit {
+    margin-top: 0.625em;
 }
 
-select {
-    width: 250px;
-    height: 200px;
-    margin-bottom: 10px;
-}
-
-input[type="text"],
-input[type="reset"],
-input[type="button"],
-input[type="submit"] {
-    margin-top: 10px;
-}
-
-#submit:disabled {
-    background-color: lightgray;
-    cursor: not-allowed;
-}
-
-/* Media queries */
-
-@media (max-width: 600px) {
-    article div {
-        display: block;
-        margin: 10px auto;
+/* Media query for smaller screens */
+@media (max-width: 48em) {
+    .container {
+        flex-direction: column;
+        align-items: center;
     }
 
-    img {
-        display: block;
-        margin: 0 auto;
-    }
-}
-
-@media (max-width: 400px) {
-    img {
+    .cart-section {
         width: 100%;
         height: auto;
+        position: static;
+        margin-top: 1.25em;
+        padding: 0.625em;
+        transform: translateY(calc(100% - 20em)); /* Move the cart below the items by default */
     }
-}
 
-@media (max-width: 320px) {
-    h1 {
-        font-size: 20px;
-    }
+
 }
