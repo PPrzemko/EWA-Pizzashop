@@ -38,18 +38,13 @@ function deleteAllCartItems(){
 
 function deleteSelectedCartItems(){
     const cart = document.getElementById("cart");
-    /*
     for (let i = cart.length - 1; i >= 0; i--) {
         if (cart[i].selected) {
             cart.remove(i);
         }
     }
-    */
-    Array.from(cart).forEach(function (item) {
-        if(item.selected){
-            cart.remove(item);
-        }
-    });
+
+
     totalAmount();
 }
 
