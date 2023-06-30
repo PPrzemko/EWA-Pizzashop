@@ -132,7 +132,7 @@ END;
 
                     </select>
             
-                    <p id="totalprice">14,50€</p>
+                    <p id="totalprice">0,00€</p>
                     <label for="address">Adresse: </label>
                     <input id="address" name='address' placeholder='Ihre Adresse' value="" required>
                     <br/>
